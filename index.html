@@ -1,0 +1,229 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>React Form</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css">
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+    <script src="https://fb.me/react-15.1.0.js"></script>
+    <script src="https://fb.me/react-dom-15.1.0.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js"></script>
+
+    <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <div id="react-app" class="container"></div>
+    <script type="text/babel">
+        var CONTACTS = [
+          { 
+            key: 1,
+            name: "James Nelson",
+            email: "james@jamesknelson.com",
+            bio: "The guy from the example"
+          },
+          { 
+            key: 2,
+            name: "Batman",
+            email: "batman@batyemail.com",
+            bio: "I'm Bruce Wayne, shh!"
+          },
+          { 
+            key: 3,
+            name: "Connan",
+            email: "connanthebarbarian@gmail.com",
+            bio: "Arrrg!"
+          },
+          { 
+            key: 4,
+            name: "Pablo Escobar",
+            email: "pablitoe@merka.com",
+            bio: "Llegaron los pibe chorros, queremos las manos de todos arriba"
+          }
+        ];
+
+        var ContactsList = React.createClass({
+          getInitialState() {
+            return { contacts: CONTACTS };
+          },
+
+          refreshList(inContacts) {
+            this.setState({ contacts: inContacts });
+          },
+
+          render() {
+            var fContacts = this.state.contacts
+                .filter(contact => { return contact.email; })
+                .map(contact => { return(
+                    <Contact contact={ contact } />
+                  );
+                });
+
+            return(
+              <div>
+                  <ContactForm refreshList={ this.refreshList }
+                               contacts={ this.state.contacts } />
+                  <div className="row">
+                      <h2 className="title">Contacts List</h2>
+                      <ul>
+                        { fContacts }
+                      </ul>
+                  </div>
+              </div>
+            );
+          }
+        }); 
+
+        var Contact = React.createClass({
+          propTypes: {
+            contact: React.PropTypes.object.isRequired
+          },
+
+          render() {
+            var in_contact = this.props.contact;
+            return(
+              <li id="contact{ contact.key }">
+                  <div className="col s4">
+                      <div className="col-container">
+                          <h3>{ in_contact.name }</h3>
+                          <a href="mailto:{ in_contact.email }">{ in_contact.email }</a>
+                          <p className="flow-text truncate">{ in_contact.bio }</p>
+                      </div>
+                  </div>
+              </li>
+            );
+          }
+        });
+
+        var ContactForm = React.createClass({
+          getInitialState() {
+            return {
+              name: '',
+              email: '',
+              bio: '',
+              errorHidden: true
+            };
+          },
+
+          handleOnChage(event) {
+            var inKey = event.target.id;
+            var inValue = event.target.value;
+            this.setState(function(prevState, prevProps) {
+              prevState[inKey] = inValue;
+            });
+          },
+
+          handleSubmit(event) {
+            event.preventDefault();
+            var props = this.state;
+            var fields = Object.keys(props)
+                .filter(prop => { return props[prop] === "" });
+            if (fields.length === 0) {
+              var newContacts = this.props.contacts.concat(this.state);
+              this.props.refreshList(newContacts);
+              this.setState({ name: '', email: '', bio: '' });
+            } else {
+              this.setState({ errorHidden: false });
+            };
+          },
+
+          render() {
+            return(
+              <div className="row form-row">
+                  <h2 className="title">New Contact</h2>
+                  <form onSubmit={ this.handleSubmit }
+                        onChange={ this.handleOnChage }
+                        method="POST">
+                      <div className="input-field col s6">
+                          <Field id="name" fieldType="text" />
+                      </div>
+                      <div className="input-field col s6">
+                          <input id="email" type="email" value={ this.state.email} />
+                          <label htmlFor="email">Email</label>
+                      </div>
+                      <div className="col s12"></div>
+                      <div className="input-field col s12">
+                          <textarea id="bio"
+                                    value={ this.state.bio }
+                                    className="materialize-textarea"></textarea>
+                          <label htmlFor="bio">Bio</label>
+                      </div>
+                      <input type="submit"
+                             value="Add Contact"
+                             className="btn waves-effect waves-light"/>
+                  </form>
+              </div>
+            );
+          }
+        });
+
+        var Field = React.createClass ({
+          getInitialState() {
+            return {
+              isEmpty: true,
+              value: "",
+              valid: true,
+              errorMessage: null,
+              errorHidden: true
+            }
+          },
+
+          handleChange(event) {
+            if (event.target.value !== "") {
+              this.setState({
+                valid: true,
+                errorMessage: null,
+                errorHidden: true,
+              });
+            } else {
+              this.setState({
+                valid: false
+              });
+            };
+            this.setState({ value: event.target.value });
+          },
+
+          handleBlur() {
+            if (!this.state.valid) {
+              this.setState({
+                errorMessage: 'Invalid Value',
+                errorHidden: false,
+              });
+            }
+          },
+
+          render() {
+            return (
+              <div>
+                  <input id={ this.id }
+                         type={ this.props.fieldType }
+                         value={ this.state.value }
+                         onChange={ this.handleChange }
+                         onBlur={ this.handleBlur } />
+                  <label htmlFor="name">Name</label>
+                  <ErrorMessages hide={ this.state.errorHidden }
+                                 message={ this.state.errorMessage } />
+              </div>
+            );
+          }
+        });
+
+        var ErrorMessages = React.createClass({
+          render: function() {
+            var classes = ['m-error'];
+            if (this.props.hide) { classes.push('hidden') };
+            return(
+              <p className={ classes.join(' ') }>
+                { this.props.message }
+              </p>
+            );
+          }
+        });
+
+        ReactDOM.render(
+          <ContactsList />,
+          document.getElementById('react-app')
+        );
+    </script>
+</body>
+</html>

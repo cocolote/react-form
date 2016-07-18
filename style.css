@@ -1,0 +1,31 @@
+body {
+  font-size: 100%;
+}
+
+.hidden { display: none; }
+.m-error { color: red; }
+
+.row {
+  border: 1px solid rgba(0,0,0,0.03);
+  background-color: ghostwhite;
+  padding: 0 0 1.5rem;
+}
+
+.title {
+  background-color: #183c69;
+  color: #b2f133;
+  padding: 0.4rem 0.6rem;
+  margin-top: 0;
+}
+
+.btn {
+  margin-left: 0.8rem;
+}
+
+.col-container {
+  margin: 1rem 0;
+  padding: 1px 0.5rem;
+  text-align: center;
+  background-color: lavender;
+  box-sizing: border-box;
+}
