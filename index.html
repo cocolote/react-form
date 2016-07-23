@@ -100,8 +100,7 @@
             return {
               name: '',
               email: '',
-              bio: '',
-              errorHidden: true
+              bio: ''
             };
           },
 
@@ -123,7 +122,7 @@
               this.props.refreshList(newContacts);
               this.setState({ name: '', email: '', bio: '' });
             } else {
-              this.setState({ errorHidden: false });
+              alert('There is nothing to submit');
             };
           },
 
@@ -162,7 +161,7 @@
             return {
               isEmpty: true,
               value: "",
-              valid: true,
+              valid: false,
               errorMessage: null,
               errorHidden: true
             }
@@ -195,7 +194,7 @@
           render() {
             return (
               <div>
-                  <input id={ this.id }
+                  <input id={ this.props.id }
                          type={ this.props.fieldType }
                          value={ this.state.value }
                          onChange={ this.handleChange }
