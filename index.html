@@ -42,6 +42,35 @@
           }
         ];
 
+        var routes = {
+          "#/contacts": ContactList,
+          "404": NotFound
+        };
+
+        var Router = React.createClass({
+          getInitialState() {
+            return { url: "" };
+          },
+
+          setRoute() {
+            this.setState({ url: window.location.hash });
+          },
+
+          render() {
+            return routes[this.state.url] ? routes[this.state.url] : routes['404'];
+          }
+        });
+
+        var NotFound = React.createClass({
+          render() {
+            return(
+              <div>
+                <p className="flow-text">404 Not Found</p>
+              </div>
+            );
+          }
+        });
+
         var ContactsList = React.createClass({
           getInitialState() {
             return { contacts: CONTACTS };
@@ -212,15 +241,15 @@
             var classes = ['m-error'];
             if (this.props.hide) { classes.push('hidden') };
             return(
-              <p className={ classes.join(' ') }>
+              <span className={ classes.join(' ') }>
                 { this.props.message }
-              </p>
+              </span>
             );
           }
         });
 
         ReactDOM.render(
-          <ContactsList />,
+          <Router />,
           document.getElementById('react-app')
         );
     </script>
