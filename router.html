@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>React Form</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css">
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+    <script src="https://fb.me/react-15.1.0.js"></script>
+    <script src="https://fb.me/react-dom-15.1.0.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js"></script>
+
+    <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <div id="react-app" class="container"></div>
+    <script type="text/babel">
+        // Handle the initial route
+        function navigated() {
+          var Router = React.createClass({
+            render() {
+              var route = this.props.route;
+              var message = {
+                "#/": "I'm amazing! I've made a Raw React Router!",
+                "404": "Not Found!"
+              };
+
+              return(
+                <h1>{ message[route] ? message[route] : message['404'] }</h1>
+              );
+            }
+          });
+          ReactDOM.render(
+            <Router route={ window.location.hash } />,
+            document.getElementById('react-app')
+          );
+        };
+
+        // Handle browser navigation events
+        window.addEventListener('hashchanged', navigated(), false);
+    </script>
+</body>
+</html>
