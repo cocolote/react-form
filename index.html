@@ -18,8 +18,7 @@
         var CONTACTS = [
           { 
             key: 1,
-            name: "James Nelson",
-            email: "james@jamesknelson.com",
+            name: "James Nelson", email: "james@jamesknelson.com",
             bio: "The guy from the example"
           },
           { 
@@ -42,22 +41,27 @@
           }
         ];
 
-        var routes = {
-          "#/contacts": ContactList,
-          "404": NotFound
-        };
-
         var Router = React.createClass({
           getInitialState() {
-            return { url: "" };
+            return { url: '' };
           },
 
-          setRoute() {
+          componentDidMount() {
+            window.addEventListener('hashchange', this.setURL, false);
+          },
+
+          setURL() {
             this.setState({ url: window.location.hash });
           },
 
           render() {
-            return routes[this.state.url] ? routes[this.state.url] : routes['404'];
+            switch(this.state.url) {
+              case '#/contacts':
+                return <ContactsList />;
+                break;
+              default:
+                return <NotFound />;
+            };
           }
         });
 
@@ -66,6 +70,7 @@
             return(
               <div>
                 <p className="flow-text">404 Not Found</p>
+                <a href="#/contacts">Contacts</a>
               </div>
             );
           }
@@ -248,10 +253,13 @@
           }
         });
 
-        ReactDOM.render(
-          <Router />,
-          document.getElementById('react-app')
-        );
+//        function launchApp() {
+          ReactDOM.render(
+            <Router />,
+            document.getElementById('react-app')
+          );
+//        };
+
     </script>
 </body>
 </html>
